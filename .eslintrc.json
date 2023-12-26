@@ -1,3 +1,11 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals"],
+  "plugins": ["react"],
+  "rules": {
+    "react/boolean-prop-naming": [
+      "error",
+      { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }
+    ],
+    "react/no-array-index-key": "warn"
+  }
 }

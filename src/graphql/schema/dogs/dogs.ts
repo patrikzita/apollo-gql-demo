@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType()
-export class DogAttribute {
+class DogAttribute {
   @Field(() => ID)
   key: string;
 
