@@ -3,9 +3,10 @@ import { ApolloServer } from "apollo-server-micro";
 import { buildSchema } from "type-graphql";
 import { DogsResolver } from "@/graphql/schema/dogs/dogs.resolver";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import { UserResolver } from "@/graphql/schema/users/users.resolver";
 
 const schema = await buildSchema({
-  resolvers: [DogsResolver],
+  resolvers: [DogsResolver, UserResolver],
 });
 
 const server = new ApolloServer({
