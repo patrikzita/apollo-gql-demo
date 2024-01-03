@@ -6,6 +6,7 @@
       "error",
       { "rule": "^is[A-Z]([A-Za-z0-9]?)+" }
     ],
-    "react/no-array-index-key": "warn"
+    "react/no-array-index-key": "warn",
+    "react/jsx-uses-vars": "error"
   }
 }

@@ -4,3 +4,10 @@ query getDogs {
     breed
   }
 }
+
+query getPaginatedDogs($offset: Int, $limit: Int) {
+  paginatedDogs(offset: $offset, limit: $limit) {
+    name
+    weight
+  }
+}
