@@ -1,11 +1,13 @@
 import Example from "@/components/Example";
-import { useGetUsersQuery } from "@/generated/graphql";
+import { GetUsersDocument, useGetUsersQuery } from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/utils/apolloClient";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const { data, refetch } = useGetUsersQuery({ fetchPolicy: "no-cache" });
+  const { data, refetch } = useGetUsersQuery();
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
@@ -17,4 +19,16 @@ export default function Home() {
       <Example />
     </main>
   );
+}
+
+export async function getServerSideProps() {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: GetUsersDocument,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+  });
 }
