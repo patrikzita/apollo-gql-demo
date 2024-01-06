@@ -1,7 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "./users";
 import { db } from "@/db/db";
-import { users as dbUsers, users } from "@/db/schema";
+import { users as dbUsers } from "@/db/schema";
 
 @Resolver(User)
 export class UserResolver {
@@ -20,7 +20,7 @@ export class UserResolver {
       id,
     };
 
-    await db.insert(users).values(newUser);
+    await db.insert(dbUsers).values(newUser);
 
     return newUser;
   }

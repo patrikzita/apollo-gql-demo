@@ -1,12 +1,13 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-micro";
 import { buildSchema } from "type-graphql";
-import { DogsResolver } from "@/graphql/schema/dogs/dogs.resolver";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { UserResolver } from "@/graphql/schema/users/users.resolver";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { DealResolver } from "@/graphql/schema/deals/deals.resolver";
 
 const schema = await buildSchema({
-  resolvers: [DogsResolver, UserResolver],
+  resolvers: [UserResolver, DealResolver],
 });
 
 const server = new ApolloServer({
@@ -24,7 +25,10 @@ export const config = {
 
 const startServer = server.start();
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   res.setHeader(
     "Access-Control-Allow-Origin",
     "https://studio.apollographql.com"
