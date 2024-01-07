@@ -9,3 +9,12 @@ export class Deal {
   @Field()
   description: string;
 }
+
+@ObjectType()
+export class DealsResponse {
+  @Field(() => [Deal])
+  deals: Deal[];
+
+  @Field()
+  totalCount: number;
+}

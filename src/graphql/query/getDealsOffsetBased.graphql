@@ -1,0 +1,8 @@
+query getDealsOffsetBased($limit: Float!, $offset: Float!) {
+  dealsOffsetBased(limit: $limit, offset: $offset) {
+    id
+    description
+    title
+    __typename
+  }
+}

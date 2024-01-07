@@ -6,6 +6,10 @@ import {
   from,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import {
+  concatPagination,
+  offsetLimitPagination,
+} from "@apollo/client/utilities";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
 import { useMemo } from "react";
@@ -33,8 +37,32 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: from([errorLink, httpLink]),
-    connectToDevTools: process.env.NODE_ENV === "development",
-    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            dealsOffsetBasedExpanded: {
+              keyArgs: false, // None of the arguments will be used to generate a separate cache entry
+              merge(existing, incoming, { args: { offsetTotal = 0 } }) {
+                // Combines the incoming list of deals with the existing list
+
+                const mergedDeals = existing ? existing.deals.slice(0) : [];
+                for (let i = 0; i < incoming.deals.length; i++) {
+                  mergedDeals[offsetTotal + i] = incoming.deals[i];
+                }
+
+                return {
+                  ...existing,
+                  deals: mergedDeals,
+                  totalCount: incoming.totalCount, // Assumes totalCount is updated with each query
+                };
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 }
 
@@ -85,3 +113,32 @@ export function useApollo(pageProps) {
   const store = useMemo(() => initializeApollo(state), [state]);
   return store;
 }
+
+/* cache: new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        dealsOffsetBasedExpanded: {
+          keyArgs: false, // None of the arguments will be used to generate a separate cache entry
+          merge(existing, incoming, { args: { offsetTotal = 0 } }) {
+            // Combines the incoming list of deals with the existing list
+            const mergedDeals = existing ? existing.deals.slice(0) : [];
+            for (let i = 0; i < incoming.deals.length; ++i) {
+              mergedDeals[offsetTotal + i] = incoming.deals[i];
+            }
+            // Returns the combined list of deals and the most recent total count
+            return {
+              ...existing,
+              deals: mergedDeals,
+              totalCount: incoming.totalCount, // Assumes totalCount is updated with each query
+            };
+          },
+          // The read function is not strictly necessary here unless you need to restructure the returned data
+          read(existing) {
+            return existing;
+          },
+        },
+      },
+    },
+  },
+}), */

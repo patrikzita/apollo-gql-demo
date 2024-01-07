@@ -1,0 +1,10 @@
+query getDealsOffsetBasedExpanded($limitTotal: Float!, $offsetTotal: Float!) {
+  dealsOffsetBasedExpanded(limitTotal: $limitTotal, offsetTotal: $offsetTotal) {
+    deals {
+      description
+      id
+      title
+    }
+    totalCount
+  }
+}
