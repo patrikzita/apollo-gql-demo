@@ -1,0 +1,1 @@
+ALTER TABLE deal ADD `isActive` integer;

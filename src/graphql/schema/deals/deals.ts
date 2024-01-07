@@ -8,6 +8,8 @@ export class Deal {
   title: string;
   @Field()
   description: string;
+  @Field()
+  isActive: boolean;
 }
 
 @ObjectType()
