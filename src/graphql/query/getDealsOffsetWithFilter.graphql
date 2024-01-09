@@ -1,0 +1,15 @@
+query getDealsOffsetWithFilter(
+  $limit: Float!
+  $offset: Float!
+  $isActive: Boolean
+) {
+  dealsOffsetWithFilter(limit: $limit, offset: $offset, isActive: $isActive) {
+    deals {
+      isActive
+      id
+      description
+      title
+    }
+    totalCount
+  }
+}

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   GetDealsOffsetBasedDocument,
   GetDealsOffsetBasedExpandedDocument,
@@ -13,24 +14,6 @@ export default function BasedPagitanionPage() {
       offsetTotal: 0,
     },
   });
-
-  /*   const { data, fetchMore } = useGetDealsOffsetBasedQuery({
-    variables: {
-      limit: 3,
-      offset: 0,
-    },
-  }); */
-
-  /* const loadMore = () => {
-    const currentLength = data.dealsOffsetBased.length || 0;
-    console.log(currentLength);
-    fetchMore({
-      variables: {
-        offset: currentLength,
-        limit: 3,
-      },
-    });
-  }; */
 
   const loadMore = () => {
     const currentLength = data.dealsOffsetBasedExpanded.deals.length || 0;
@@ -49,44 +32,33 @@ export default function BasedPagitanionPage() {
   }
 
   return (
-    <main>
-      <div>
+    <main className="max-w-5xl mx-auto px-3">
+      <div className="py-10">
         {data.dealsOffsetBasedExpanded.deals &&
           data.dealsOffsetBasedExpanded.deals.map((deal) => (
             <div key={deal.id}>
               <h1>{deal.title}</h1>
             </div>
           ))}
-        {/*   {data.dealsOffsetBased.deals.map((deal) => (
-          <div key={deal.id}>
-            <h1>{deal.title}</h1>
-          </div>
-        ))} */}
-        <button onClick={loadMore}>Načíst další</button>
       </div>
+      <Button onClick={loadMore}>Načíst další</Button>
     </main>
   );
 }
 
-export async function getServerSideProps() {
+/* export async function getServerSideProps() {
   const apolloClient = initializeApollo();
 
-  /* await apolloClient.query({
-    query: GetDealsOffsetBasedDocument,
-    variables: {
-      limit: 3,
-      offset: 0,
-    },
-  }); */
-  /* await apolloClient.query({
+  await apolloClient.query({
     query: GetDealsOffsetBasedExpandedDocument,
     variables: {
       limitTotal: 3,
       offsetTotal: 0,
     },
-  }); */
+  });
 
   return addApolloState(apolloClient, {
     props: {},
   });
 }
+ */

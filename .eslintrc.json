@@ -1,6 +1,10 @@
 {
-  "extends": ["next/core-web-vitals"],
-  "plugins": ["react"],
+  "extends": ["next/core-web-vitals", "plugin:drizzle/all"],
+  "plugins": ["react", "drizzle"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "react/boolean-prop-naming": [
       "error",

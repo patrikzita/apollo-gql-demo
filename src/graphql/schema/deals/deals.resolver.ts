@@ -2,7 +2,7 @@ import { db } from "@/db/db";
 import { deals as dbDeals } from "@/db/schema";
 import { Arg, Query, Resolver } from "type-graphql";
 import { Deal, DealsResponse } from "./deals";
-import { count } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 
 @Resolver(Deal)
 export class DealResolver {
@@ -27,6 +27,42 @@ export class DealResolver {
   ): Promise<DealsResponse> {
     const deals = await db.select().from(dbDeals).offset(offset).limit(limit);
     const totalCountResult = await db.select({ value: count() }).from(dbDeals);
+    const totalCount = totalCountResult[0].value;
+
+    return {
+      deals,
+      totalCount,
+    };
+  }
+
+  @Query(() => DealsResponse)
+  async dealsOffsetWithFilter(
+    @Arg("offset") offset: number,
+    @Arg("limit") limit: number,
+    @Arg("isActive", { nullable: true }) isActive?: boolean
+  ): Promise<DealsResponse> {
+    let dealsQueryBuilder = db
+      .select()
+      .from(dbDeals)
+      .$dynamic()
+      .offset(offset)
+      .limit(limit);
+    let totalCountQueryBuilder = db
+      .select({ value: count() })
+      .from(dbDeals)
+      .$dynamic();
+
+    if (isActive !== undefined) {
+      dealsQueryBuilder = dealsQueryBuilder.where(
+        eq(dbDeals.isActive, isActive)
+      );
+      totalCountQueryBuilder = totalCountQueryBuilder.where(
+        eq(dbDeals.isActive, isActive)
+      );
+    }
+
+    const deals = await dealsQueryBuilder;
+    const totalCountResult = await totalCountQueryBuilder;
     const totalCount = totalCountResult[0].value;
 
     return {

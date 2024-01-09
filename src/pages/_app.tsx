@@ -1,3 +1,4 @@
+import MainNav from "@/components/layouts/MainNav";
 import "@/styles/globals.css";
 import { useApollo } from "@/utils/apolloClient";
 import { ApolloProvider } from "@apollo/client";
@@ -8,6 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={apolloClient}>
+      <MainNav />
       <Component {...pageProps} />
     </ApolloProvider>
   );
