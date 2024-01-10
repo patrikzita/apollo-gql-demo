@@ -9,7 +9,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <MainNav />
+      <div className="flex justify-center bg-stone-50 py-3">
+        <MainNav />
+      </div>
       <Component {...pageProps} />
     </ApolloProvider>
   );
