@@ -1,3 +1,4 @@
+import ExampleExplanation from "@/components/ExampleExplanation";
 import { Button } from "@/components/ui/button";
 import {
   GetDealsOffsetBasedDocument,
@@ -5,8 +6,14 @@ import {
 } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/utils/apolloClient";
 
+const EXPLANATION = {
+  title: "Offset Pagination - single field query",
+  description:
+    "Nejjednodušší způsob offset-based paginace, pro sprváný cachování je potřeba nastavit typePolicy v InMemoryCache.",
+};
+
 export default function BasedPagitanionPage() {
-  const { data, fetchMore, loading } = useGetDealsOffsetBasedQuery({
+  const { data, fetchMore, loading, error } = useGetDealsOffsetBasedQuery({
     variables: {
       limit: 3,
       offset: 0,
@@ -23,26 +30,38 @@ export default function BasedPagitanionPage() {
     });
   };
 
-  console.log(data);
+  if (data?.dealsOffsetBased && data?.dealsOffsetBased.length !== 0) {
+    return (
+      <main className="max-w-5xl mx-auto px-3">
+        <ExampleExplanation
+          title={EXPLANATION.title}
+          description={EXPLANATION.description}
+        />
+
+        <div className="py-10">
+          {data.dealsOffsetBased.map((deal) => (
+            <div key={deal.id}>
+              <h1>{deal.title}</h1>
+            </div>
+          ))}
+        </div>
+        <Button onClick={loadMore}>Načíst další</Button>
+      </main>
+    );
+  }
+
   if (loading) {
     return <div>loading</div>;
   }
 
-  return (
-    <main className="max-w-5xl mx-auto px-3">
-      <div className="py-10">
-        {data.dealsOffsetBased.map((deal) => (
-          <div key={deal.id}>
-            <h1>{deal.title}</h1>
-          </div>
-        ))}
-      </div>
-      <Button onClick={loadMore}>Načíst další</Button>
-    </main>
-  );
+  if (error) {
+    return <div>Error</div>;
+  }
+
+  return <div>Nic tu není</div>;
 }
 
-/* export async function getServerSideProps() {
+export async function getServerSideProps() {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
@@ -57,4 +76,3 @@ export default function BasedPagitanionPage() {
     props: {},
   });
 }
- */
