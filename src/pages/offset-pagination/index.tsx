@@ -30,7 +30,7 @@ export default function BasedPagitanionPage() {
     });
   };
 
-  if (data?.dealsOffsetBased && data?.dealsOffsetBased.length !== 0) {
+  if (data?.dealsOffsetBased.length) {
     return (
       <main className="max-w-5xl mx-auto px-3">
         <ExampleExplanation

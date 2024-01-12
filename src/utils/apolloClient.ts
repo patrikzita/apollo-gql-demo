@@ -57,6 +57,22 @@ function createApolloClient() {
               },
             },
             dealsOffsetBased: offsetLimitPagination(),
+            dealsOffsetWithFilter: {
+              keyArgs: ["isActive"],
+              merge(existing, incoming, { args: { offset = 0, isActive } }) {
+                console.log({ existing });
+                console.log({ incoming });
+                const mergedDeals = existing ? existing.deals.slice(0) : [];
+                for (let i = 0; i < incoming.deals.length; i++) {
+                  mergedDeals[offset + i] = incoming.deals[i];
+                }
+
+                return {
+                  deals: mergedDeals,
+                  totalCount: incoming.totalCount,
+                };
+              },
+            },
           },
         },
       },

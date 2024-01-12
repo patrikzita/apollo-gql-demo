@@ -6,6 +6,7 @@ import {
 } from "@/generated/graphql";
 import { cn } from "@/lib/utils";
 import { addApolloState, initializeApollo } from "@/utils/apolloClient";
+import { NetworkStatus } from "@apollo/client";
 import { useState } from "react";
 
 const EXPLANATION = {
@@ -16,13 +17,17 @@ const EXPLANATION = {
 export default function BasedPaginationWithFiltersPage() {
   const [filter, setFilter] = useState<boolean | undefined>();
 
-  const { data, loading, error, fetchMore } = useGetDealsOffsetWithFilterQuery({
-    variables: {
-      limit: 3,
-      offset: 0,
-      isActive: filter,
-    },
-  });
+  const { data, loading, error, fetchMore, networkStatus } =
+    useGetDealsOffsetWithFilterQuery({
+      variables: {
+        limit: 3,
+        offset: 0,
+        isActive: filter,
+      },
+      notifyOnNetworkStatusChange: true,
+    });
+
+  const isLoadingMoreDeals = networkStatus === NetworkStatus.fetchMore;
 
   const loadMore = () => {
     // TODO: merge cache objects
@@ -35,7 +40,11 @@ export default function BasedPaginationWithFiltersPage() {
     });
   };
 
-  if (data?.dealsOffsetWithFilter?.deals) {
+  if (data?.dealsOffsetWithFilter?.deals.length) {
+    const areMoreDeals =
+      data.dealsOffsetWithFilter.deals.length <
+      data.dealsOffsetWithFilter.totalCount;
+
     return (
       <main className="max-w-5xl mx-auto px-3">
         <ExampleExplanation
@@ -44,7 +53,7 @@ export default function BasedPaginationWithFiltersPage() {
         >
           <div className="py-1">
             <h3 className="font-semibold">Poznámky</h3>
-            <ul className="text-xs">
+            <ul className="text-xs space-y-2">
               <li>
                 - Mění se zde data, díky tomu že se změní state filters a celá
                 komponenta se re-renderuje
@@ -52,6 +61,10 @@ export default function BasedPaginationWithFiltersPage() {
               <li>
                 - Nepoužívá se zde refetch pro změnu filtrů, protože nebere v
                 potaz cache.
+              </li>
+              <li>
+                - Je potřeba změnit typePolicies a konkrétně změnit způsob podle
+                čeho se bude cachovat. V tomhle případě podle argumentu isActive
               </li>
             </ul>
           </div>
@@ -79,11 +92,18 @@ export default function BasedPaginationWithFiltersPage() {
                 </h1>
               </div>
             ))}
+          {!areMoreDeals && (
+            <div className="pt-2 text-sm text-red-400">
+              Žádné další výsledky
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
-          <Button variant="destructive" onClick={loadMore}>
-            Show More
-          </Button>
+          {areMoreDeals && (
+            <Button onClick={loadMore} disabled={isLoadingMoreDeals}>
+              {isLoadingMoreDeals ? "Loading..." : "Show More"}
+            </Button>
+          )}
         </div>
       </main>
     );
@@ -100,7 +120,7 @@ export default function BasedPaginationWithFiltersPage() {
   return <div>Asi se sem nedostanu</div>;
 }
 
-export async function getServerSideProps() {
+/* export async function getServerSideProps() {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
@@ -115,3 +135,4 @@ export async function getServerSideProps() {
     props: {},
   });
 }
+ */
