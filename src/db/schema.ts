@@ -6,7 +6,7 @@ export const users = sqliteTable("users", {
 });
 
 export const deals = sqliteTable("deal", {
-  id: text("id").primaryKey(),
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   title: text("title"),
   description: text("description"),
   isActive: integer("isActive", { mode: "boolean" }),

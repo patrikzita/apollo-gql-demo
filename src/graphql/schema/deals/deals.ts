@@ -1,14 +1,14 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
 
 @ObjectType({ description: "Deal Object" })
 export class Deal {
   @Field()
-  id: string;
+  id: number;
   @Field()
   title: string;
   @Field()
   description: string;
-  @Field()
+  @Field({ nullable: true })
   isActive: boolean;
 }
 
