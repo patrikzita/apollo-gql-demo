@@ -14,6 +14,7 @@ const ROUTES = {
   OFFSET_PAGINATION: "/offset-pagination",
   BASED_PAGINATION_WITH_FILTERS: "/pagination-with-filters",
   OFFSET_PAGINATION_EXPANDED: "/offset-pagination-expanded",
+  CREATE_DEAL: "/create-deal",
 };
 
 const MainNav = () => {
@@ -26,6 +27,16 @@ const MainNav = () => {
               Home
             </NavigationMenuLink>
           </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Basics</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <Link href={ROUTES.CREATE_DEAL} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Mutation - update cache
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Pagination</NavigationMenuTrigger>

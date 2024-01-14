@@ -1,0 +1,8 @@
+mutation createDeal($isActive: Boolean, $title: String!, $description: String) {
+  createDeal(isActive: $isActive, title: $title, description: $description) {
+    description
+    id
+    isActive
+    title
+  }
+}

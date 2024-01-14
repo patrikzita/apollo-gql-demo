@@ -1,6 +1,6 @@
 import { db } from "@/db/db";
 import { deals as dbDeals } from "@/db/schema";
-import { Arg, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Deal, DealsResponse } from "./deals";
 import { count, eq } from "drizzle-orm";
 
@@ -11,6 +11,21 @@ export class DealResolver {
     const deals = db.select().from(dbDeals).all();
     return deals;
   }
+
+  @Mutation(() => Deal)
+  async createDeal(
+    @Arg("title") title: string,
+    @Arg("description", { nullable: true }) description: string,
+    @Arg("isActive", { nullable: true }) isActive: boolean
+  ): Promise<Deal> {
+    const newDeal = await db
+      .insert(dbDeals)
+      .values({ title, description, isActive })
+      .returning();
+
+    return newDeal[0];
+  }
+
   @Query(() => [Deal])
   async dealsOffsetBased(
     @Arg("offset") offset: number,

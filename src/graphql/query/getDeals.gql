@@ -1,0 +1,15 @@
+query getDeals {
+  deals {
+    description
+    id
+    isActive
+    title
+  }
+}
+
+fragment Deal on Deal {
+  description
+  id
+  isActive
+  title
+}
