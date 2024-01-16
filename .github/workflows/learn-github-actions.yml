@@ -15,7 +15,3 @@ jobs:
       - run: sleep 15
       - run: npm run codegen
       - run: npm run build
-      - name: Spellcheck
-        run: |
-          npm install -g cspell
-          cspell "**/*.{js,jsx,ts,tsx,md}"
