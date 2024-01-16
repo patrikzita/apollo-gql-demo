@@ -15,6 +15,7 @@ const ROUTES = {
   BASED_PAGINATION_WITH_FILTERS: "/pagination-with-filters",
   OFFSET_PAGINATION_EXPANDED: "/offset-pagination-expanded",
   CREATE_DEAL: "/create-deal",
+  SCROLL_OFFSET_PAGINATION: "/scroll-offset-pagination",
 };
 
 const MainNav = () => {
@@ -44,6 +45,15 @@ const MainNav = () => {
             <Link href={ROUTES.OFFSET_PAGINATION} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Offset Pagination
+              </NavigationMenuLink>
+            </Link>
+            <Link
+              href={ROUTES.SCROLL_OFFSET_PAGINATION}
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Scroll offset pagination
               </NavigationMenuLink>
             </Link>
             <Link
