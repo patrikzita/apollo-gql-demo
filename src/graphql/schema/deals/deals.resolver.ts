@@ -23,6 +23,8 @@ export class DealResolver {
       .values({ title, description, isActive })
       .returning();
 
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     return newDeal[0];
   }
 

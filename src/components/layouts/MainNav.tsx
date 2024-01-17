@@ -16,6 +16,7 @@ const ROUTES = {
   OFFSET_PAGINATION_EXPANDED: "/offset-pagination-expanded",
   CREATE_DEAL: "/create-deal",
   SCROLL_OFFSET_PAGINATION: "/scroll-offset-pagination",
+  OPTIMISTIC_UI: "/optimistic-ui",
 };
 
 const MainNav = () => {
@@ -35,6 +36,11 @@ const MainNav = () => {
             <Link href={ROUTES.CREATE_DEAL} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Mutation - update cache
+              </NavigationMenuLink>
+            </Link>
+            <Link href={ROUTES.OPTIMISTIC_UI} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Mutation - Optimistic UI
               </NavigationMenuLink>
             </Link>
           </NavigationMenuContent>
