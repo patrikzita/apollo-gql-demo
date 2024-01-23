@@ -20,3 +20,35 @@ export class DealsResponse {
   @Field()
   totalCount: number;
 }
+
+@ObjectType()
+export class PageInfo {
+  @Field()
+  hasNextPage: boolean;
+
+  @Field({ nullable: true })
+  endCursor: number;
+}
+
+@ObjectType()
+export class DealEdge {
+  @Field(() => Deal)
+  node: Deal;
+
+  @Field()
+  cursor: number;
+}
+
+@ObjectType()
+export class DealConnection {
+  @Field(() => [DealEdge])
+  edges: DealEdge[];
+
+  @Field()
+  pageInfo: PageInfo;
+}
+@ObjectType()
+export class DealDeleteResponse {
+  @Field({ nullable: true })
+  deletedId: number;
+}

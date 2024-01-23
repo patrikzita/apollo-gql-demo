@@ -1,0 +1,17 @@
+query getCursorPaginatedDeals($limit: Float, $afterCursor: Float) {
+  cursorPaginatedDeals(limit: $limit, afterCursor: $afterCursor) {
+    edges {
+      cursor
+      node {
+        description
+        id
+        isActive
+        title
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

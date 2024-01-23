@@ -73,6 +73,27 @@ function createApolloClient() {
                 };
               },
             },
+            cursorPaginatedDeals: {
+              keyArgs: false,
+              merge(existing = { edges: [], pageInfo: {} }, incoming) {
+                const edgeMap = new Map(
+                  existing.edges.map((edge) => [edge.cursor, edge])
+                );
+
+                incoming.edges.forEach((edge) => {
+                  edgeMap.set(edge.cursor, edge);
+                });
+
+                const mergedEdges = Array.from(edgeMap.values());
+                console.log(mergedEdges);
+                const pageInfo = incoming.pageInfo;
+
+                return { edges: mergedEdges, pageInfo };
+              },
+              read(existing) {
+                return existing;
+              },
+            },
           },
         },
       },

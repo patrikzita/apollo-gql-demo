@@ -16,6 +16,7 @@ const ROUTES = {
   OFFSET_PAGINATION_EXPANDED: "/offset-pagination-expanded",
   CREATE_DEAL: "/create-deal",
   SCROLL_OFFSET_PAGINATION: "/scroll-offset-pagination",
+  CURSOR_PAGINATION: "/cursor-pagination",
   OPTIMISTIC_UI: "/optimistic-ui",
 };
 
@@ -78,6 +79,11 @@ const MainNav = () => {
             >
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Based pagination /w Filters
+              </NavigationMenuLink>
+            </Link>
+            <Link href={ROUTES.CURSOR_PAGINATION} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Cursor pagination
               </NavigationMenuLink>
             </Link>
           </NavigationMenuContent>

@@ -1,0 +1,5 @@
+mutation deleteDeal($deleteDealId: Float!) {
+  deleteDeal(id: $deleteDealId) {
+    deletedId
+  }
+}

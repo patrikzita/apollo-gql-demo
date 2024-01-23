@@ -1,8 +1,13 @@
 import { db } from "@/db/db";
 import { deals as dbDeals } from "@/db/schema";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import { Deal, DealsResponse } from "./deals";
-import { count, eq } from "drizzle-orm";
+import {
+  Deal,
+  DealConnection,
+  DealDeleteResponse,
+  DealsResponse,
+} from "./deals";
+import { count, eq, gt } from "drizzle-orm";
 
 @Resolver(Deal)
 export class DealResolver {
@@ -86,5 +91,44 @@ export class DealResolver {
       deals,
       totalCount,
     };
+  }
+
+  @Query(() => DealConnection)
+  async cursorPaginatedDeals(
+    @Arg("afterCursor", { nullable: true }) afterCursor: number,
+    @Arg("limit", { defaultValue: 10 }) limit: number
+  ): Promise<DealConnection> {
+    let queryBuilder = db
+      .select()
+      .from(dbDeals)
+      .$dynamic()
+      .limit(limit + 1);
+
+    if (afterCursor) {
+      queryBuilder = queryBuilder.where(gt(dbDeals.id, afterCursor));
+    }
+
+    const deals = await queryBuilder;
+    const hasNextPage = deals.length > limit;
+    const edges = deals.slice(0, limit).map((deal) => ({
+      node: deal,
+      cursor: deal.id,
+    }));
+
+    return {
+      edges,
+      pageInfo: {
+        hasNextPage,
+        endCursor: hasNextPage ? edges[edges.length - 1].cursor : null,
+      },
+    };
+  }
+  @Mutation(() => DealDeleteResponse)
+  async deleteDeal(@Arg("id") id: number): Promise<DealDeleteResponse> {
+    const deletedUserIds = await db
+      .delete(dbDeals)
+      .where(eq(dbDeals.id, id))
+      .returning({ deletedId: dbDeals.id });
+    return deletedUserIds[0];
   }
 }
