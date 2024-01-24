@@ -18,6 +18,7 @@ const ROUTES = {
   SCROLL_OFFSET_PAGINATION: "/scroll-offset-pagination",
   CURSOR_PAGINATION: "/cursor-pagination",
   OPTIMISTIC_UI: "/optimistic-ui",
+  ERROR_HANDLING: "/error-handling",
 };
 
 const MainNav = () => {
@@ -42,6 +43,11 @@ const MainNav = () => {
             <Link href={ROUTES.OPTIMISTIC_UI} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Mutation - Optimistic UI
+              </NavigationMenuLink>
+            </Link>
+            <Link href={ROUTES.ERROR_HANDLING} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Error handling
               </NavigationMenuLink>
             </Link>
           </NavigationMenuContent>

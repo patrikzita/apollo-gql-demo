@@ -5,9 +5,11 @@ import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { UserResolver } from "@/graphql/schema/users/users.resolver";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { DealResolver } from "@/graphql/schema/deals/deals.resolver";
+import { ProductResolver } from "@/graphql/schema/product/product.resolver";
 
 const schema = await buildSchema({
-  resolvers: [UserResolver, DealResolver],
+  resolvers: [ProductResolver, UserResolver, DealResolver],
+  nullableByDefault: true,
 });
 
 const server = new ApolloServer({

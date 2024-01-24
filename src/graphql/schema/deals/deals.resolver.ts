@@ -8,6 +8,7 @@ import {
   DealsResponse,
 } from "./deals";
 import { count, eq, gt } from "drizzle-orm";
+import { GraphQLError } from "graphql";
 
 @Resolver(Deal)
 export class DealResolver {
@@ -129,6 +130,7 @@ export class DealResolver {
       .delete(dbDeals)
       .where(eq(dbDeals.id, id))
       .returning({ deletedId: dbDeals.id });
+
     return deletedUserIds[0];
   }
 }

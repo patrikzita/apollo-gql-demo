@@ -1,0 +1,10 @@
+query getErrorWithData {
+  getProducts {
+    name
+    price
+  }
+  deals {
+    id
+    title
+  }
+}
