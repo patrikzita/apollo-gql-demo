@@ -16,7 +16,7 @@ export default function ErrorHandlingPage() {
     return <div>Načítám...</div>;
   }
 
-  if (data?.deals && data?.getProducts) {
+  if (data?.deals && data?.products) {
     return (
       <main className="max-w-5xl mx-auto px-3">
         <ExampleExplanation
@@ -31,7 +31,7 @@ export default function ErrorHandlingPage() {
           ))}
         </div>
         <div className="py-10">
-          {data.getProducts.map((product) => (
+          {data.products.map((product) => (
             <div key={product.name}>
               <h1>{product.name}</h1>
             </div>
@@ -59,9 +59,9 @@ export default function ErrorHandlingPage() {
             </div>
           ))}
         </div>
-      ) : data.getProducts ? (
+      ) : data.products ? (
         <div className="py-10">
-          {data.getProducts.map((product) => (
+          {data.products.map((product) => (
             <div key={product.name}>
               <h1>{product.name}</h1>
             </div>

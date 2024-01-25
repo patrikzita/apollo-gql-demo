@@ -12,7 +12,7 @@ class Product {
 
 @Resolver(Product)
 export class ProductResolver {
-  private products = [
+  private productItems = [
     { name: "Product A", price: 100 },
     { name: "Product B", price: 200 },
     { name: "Product C", price: 200 },
@@ -22,8 +22,8 @@ export class ProductResolver {
   ];
 
   @Query(() => [Product!])
-  async getProducts(): Promise<Product[]> {
-    return this.products.map((product) => {
+  async products(): Promise<Product[]> {
+    return this.productItems.map((product) => {
       if (Math.random() < 0.3) {
         throw new ApolloError("Custom error from products");
       }

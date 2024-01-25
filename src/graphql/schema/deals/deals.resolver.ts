@@ -1,5 +1,6 @@
 import { db } from "@/db/db";
 import { deals as dbDeals } from "@/db/schema";
+import { count, eq, gt } from "drizzle-orm";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import {
   Deal,
@@ -7,8 +8,6 @@ import {
   DealDeleteResponse,
   DealsResponse,
 } from "./deals";
-import { count, eq, gt } from "drizzle-orm";
-import { GraphQLError } from "graphql";
 
 @Resolver(Deal)
 export class DealResolver {
@@ -29,7 +28,7 @@ export class DealResolver {
       .values({ title, description, isActive })
       .returning();
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     return newDeal[0];
   }

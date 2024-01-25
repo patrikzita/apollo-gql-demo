@@ -1,5 +1,6 @@
 import {
   ApolloClient,
+  ApolloLink,
   HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
@@ -9,6 +10,7 @@ import { onError } from "@apollo/client/link/error";
 import { offsetLimitPagination } from "@apollo/client/utilities";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
+import { GetServerSidePropsContext } from "next";
 import { useMemo } from "react";
 
 const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
@@ -30,10 +32,12 @@ const httpLink = new HttpLink({
   credentials: "same-origin",
 });
 
-function createApolloClient() {
+function createApolloClient(context?: GetServerSidePropsContext) {
+  const languageLink = createLanguageMiddleware(context?.locale ?? "cs");
+  console.log(context?.locale);
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: from([errorLink, httpLink]),
+    link: from([errorLink, languageLink, httpLink]),
     connectToDevTools: true,
     cache: new InMemoryCache({
       typePolicies: {
@@ -101,8 +105,16 @@ function createApolloClient() {
   });
 }
 
-export function initializeApollo(initialState = null) {
-  const _apolloClient = apolloClient ?? createApolloClient();
+type InitializeApolloParams = {
+  initialState?: NormalizedCacheObject;
+  context?: GetServerSidePropsContext;
+};
+
+export function initializeApollo({
+  initialState = null,
+  context,
+}: InitializeApolloParams) {
+  const _apolloClient = apolloClient ?? createApolloClient(context);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here
@@ -145,6 +157,22 @@ export function addApolloState(
 
 export function useApollo(pageProps) {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
-  const store = useMemo(() => initializeApollo(state), [state]);
+  const store = useMemo(
+    () => initializeApollo({ initialState: state }),
+    [state]
+  );
   return store;
+}
+
+function createLanguageMiddleware(language: string) {
+  return new ApolloLink((operation, forward) => {
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        "x-language": language,
+      },
+    }));
+
+    return forward(operation);
+  });
 }

@@ -7,6 +7,7 @@ import {
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { addApolloState, initializeApollo } from "@/utils/apolloClient";
 import { NetworkStatus } from "@apollo/client";
+import { GetServerSidePropsContext } from "next";
 import { useCallback, useEffect, useRef } from "react";
 
 const EXPLANATION = {
@@ -108,8 +109,8 @@ export default function ScrollPaginationPage() {
   return <div>Nic tu není</div>;
 }
 
-export async function getServerSideProps() {
-  const apolloClient = initializeApollo();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const apolloClient = initializeApollo({ context });
 
   await apolloClient.query({
     query: GetDealsOffsetBasedDocument,
