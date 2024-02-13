@@ -19,6 +19,7 @@ const ROUTES = {
   CURSOR_PAGINATION: "/cursor-pagination",
   OPTIMISTIC_UI: "/optimistic-ui",
   ERROR_HANDLING: "/error-handling",
+  REFETCH: "/refetch-changing",
 };
 
 const MainNav = () => {
@@ -48,6 +49,11 @@ const MainNav = () => {
             <Link href={ROUTES.ERROR_HANDLING} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Error handling
+              </NavigationMenuLink>
+            </Link>
+            <Link href={ROUTES.REFETCH} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Refetching
               </NavigationMenuLink>
             </Link>
           </NavigationMenuContent>

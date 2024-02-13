@@ -62,7 +62,7 @@ export default function BasedPagitanionPage() {
 }
 
 export async function getServerSideProps() {
-  const apolloClient = initializeApollo();
+  const apolloClient = initializeApollo({});
 
   await apolloClient.query({
     query: GetDealsOffsetBasedDocument,

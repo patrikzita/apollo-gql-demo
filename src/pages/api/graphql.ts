@@ -6,9 +6,15 @@ import { UserResolver } from "@/graphql/schema/users/users.resolver";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { DealResolver } from "@/graphql/schema/deals/deals.resolver";
 import { ProductResolver } from "@/graphql/schema/product/product.resolver";
+import { GlampResolver } from "@/graphql/schema/glamps/glamps.resolver";
+
+export interface MyContext {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}
 
 const schema = await buildSchema({
-  resolvers: [ProductResolver, UserResolver, DealResolver],
+  resolvers: [ProductResolver, UserResolver, DealResolver, GlampResolver],
   nullableByDefault: true,
 });
 
@@ -17,6 +23,7 @@ const server = new ApolloServer({
   csrfPrevention: false,
   cache: "bounded",
   plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  context: ({ req, res }): MyContext => ({ req, res }),
 });
 
 export const config = {
