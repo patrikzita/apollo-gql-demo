@@ -1,5 +1,6 @@
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import MainNav from "@/components/layouts/MainNav";
+import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 import { useApollo } from "@/utils/apolloClient";
 import { ApolloProvider } from "@apollo/client";
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <MainNav />
       </div>
       <Component {...pageProps} />
+      <Toaster />
       <TailwindIndicator />
     </ApolloProvider>
   );

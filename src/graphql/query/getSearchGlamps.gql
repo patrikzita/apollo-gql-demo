@@ -1,0 +1,33 @@
+query getSearchGlamps(
+  $limit: Int
+  $offset: Int
+  $isLuxury: Boolean
+  $minPrice: Float
+  $maxPrice: Float
+) {
+  searchGlamps(
+    limit: $limit
+    offset: $offset
+    isLuxury: $isLuxury
+    minPrice: $minPrice
+    maxPrice: $maxPrice
+  ) {
+    glamps {
+      id
+      title
+      adultCapacity
+      isLuxury
+      price
+      id
+      description
+      childCapacity
+      availableFrom
+      availableTo
+      type
+    }
+    pageInfo {
+      hasNextPage
+      total
+    }
+  }
+}

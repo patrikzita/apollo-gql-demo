@@ -35,9 +35,7 @@ export class GlampResolver {
 
     if (dateRangeHeader) {
       const parsedDateRange = JSON.parse(dateRangeHeader as string);
-      console.log(parsedDateRange);
       const result = DateRangeSchema.safeParse(parsedDateRange);
-      console.log(result);
       if (result.success) {
         dateRange = result.data;
       } else {
