@@ -17,7 +17,9 @@ export function PreviewCard({ className, glamp, ...props }: CardProps) {
   return (
     <Card className={cn("w-[380px]", className)} {...props}>
       <CardHeader>
-        <CardTitle>{glamp.title}</CardTitle>
+        <CardTitle className={cn({ "text-yellow-600": glamp.isLuxury })}>
+          {glamp.title}
+        </CardTitle>
         <CardDescription>{glamp.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4"></CardContent>

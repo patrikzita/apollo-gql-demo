@@ -1,28 +1,55 @@
-import ExampleExplanation from "@/components/ExampleExplanation";
 import { PreviewCard } from "@/components/PreviewCard";
 import SearchBar from "@/components/SeachBar";
 import { Shell } from "@/components/Shell";
-import { Button } from "@/components/ui/button";
 import {
-  GetDealsOffsetBasedDocument,
-  useGetDealsOffsetBasedQuery,
+  GetSearchGlampsDocument,
+  GetSearchGlampsQuery,
+  GetSearchGlampsQueryVariables,
   useGetSearchGlampsQuery,
 } from "@/generated/graphql";
+import { getValidSearchParams } from "@/lib/validators/searchParams";
 import { addApolloState, initializeApollo } from "@/utils/apolloClient";
-
-const EXPLANATION = {
-  title: "Offset Pagination - single field query",
-  description:
-    "Nejjednodušší způsob offset-based paginace, pro sprváný cachování je potřeba nastavit typePolicy v InMemoryCache.",
-};
+import { formatISO } from "date-fns";
+import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
+import { DateRange } from "react-day-picker";
 
 export default function GlampsSearchPage() {
-  const { data, loading } = useGetSearchGlampsQuery({
+  const router = useRouter();
+
+  const { isLuxury } = router.query;
+
+  const { data, loading, refetch } = useGetSearchGlampsQuery({
     variables: {
       limit: 3,
       offset: 0,
+      isLuxury: !!isLuxury,
     },
+    fetchPolicy: "cache-first",
+    nextFetchPolicy: "network-only",
   });
+
+  const handleSearch = async ({
+    variables,
+    dateRange,
+  }: {
+    variables: GetSearchGlampsQueryVariables;
+    dateRange: DateRange;
+  }) => {
+    const searchParams = {
+      isLuxury: variables.isLuxury ?? false,
+      dateFrom: formatISO(dateRange.from) ?? undefined,
+      dateTo: formatISO(dateRange.to) ?? undefined,
+    };
+
+    // Bez await je zkreslený middleware a dostává pozdě datumy
+    await router.push({
+      pathname: router.pathname,
+      query: { ...searchParams },
+    });
+
+    refetch(variables);
+  };
 
   if (loading) {
     <div>loading</div>;
@@ -31,7 +58,7 @@ export default function GlampsSearchPage() {
   return (
     <Shell as="main" variant="default">
       <h1>Glamping</h1>
-      <SearchBar />
+      <SearchBar onSearch={handleSearch} />
       <div className="grid grid-cols-3 gap-3">
         {data?.searchGlamps.glamps.map((glamp) => (
           <PreviewCard key={glamp.id} glamp={glamp} />
@@ -41,19 +68,23 @@ export default function GlampsSearchPage() {
   );
 }
 
-/* export async function getServerSideProps() {
-  const apolloClient = initializeApollo({});
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const apolloClient = initializeApollo({ context });
 
-  await apolloClient.query({
-    query: GetDealsOffsetBasedDocument,
-    variables: {
-      limit: 3,
-      offset: 0,
-    },
-  });
+  const validSearchParams = getValidSearchParams(context.query);
+
+  await apolloClient.query<GetSearchGlampsQuery, GetSearchGlampsQueryVariables>(
+    {
+      query: GetSearchGlampsDocument,
+      variables: {
+        limit: 3,
+        offset: 0,
+        isLuxury: validSearchParams.isLuxury,
+      },
+    }
+  );
 
   return addApolloState(apolloClient, {
     props: {},
   });
 }
- */

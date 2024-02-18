@@ -12,6 +12,7 @@ import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
 import { GetServerSidePropsContext } from "next";
 import { useMemo } from "react";
+import qs from "qs";
 
 const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -33,11 +34,17 @@ const httpLink = new HttpLink({
 });
 
 function createApolloClient(context?: GetServerSidePropsContext) {
+  const searchParams =
+    typeof window !== "undefined"
+      ? window.location.search.substring(1)
+      : qs.stringify(context?.query);
+
   const languageLink = createLanguageMiddleware(context?.locale ?? "cs");
-  console.log(context?.locale);
+  const dateRangeLink = createDateRangeMiddleware(searchParams);
+
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: from([errorLink, languageLink, httpLink]),
+    link: from([errorLink, languageLink, dateRangeLink, httpLink]),
     connectToDevTools: true,
     cache: new InMemoryCache({
       typePolicies: {
@@ -170,6 +177,34 @@ function createLanguageMiddleware(language: string) {
       headers: {
         ...headers,
         "x-language": language,
+      },
+    }));
+
+    return forward(operation);
+  });
+}
+
+function createDateRangeMiddleware(searchParams: string) {
+  return new ApolloLink((operation, forward) => {
+    const currentSearchParams =
+      typeof window !== "undefined"
+        ? window.location.search.substring(1)
+        : searchParams;
+
+    const params = new URLSearchParams(currentSearchParams);
+
+    const dateFrom = params.get("dateFrom");
+    const dateTo = params.get("dateTo");
+
+    const dateRange = JSON.stringify({
+      from: dateFrom,
+      to: dateTo,
+    });
+
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        "x-date-range": dateRange,
       },
     }));
 

@@ -66,7 +66,7 @@ export class GlampResolver {
       );
     }
 
-    if (isLuxury !== undefined) {
+    if (isLuxury === true) {
       glampsQueryBuilder = glampsQueryBuilder.where(
         eq(dbGlamps.isLuxury, isLuxury)
       );
