@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Glamp } from "@/generated/graphql";
 import { cn } from "@/lib/utils";
+import { formatDate } from "date-fns";
 
 type CardProps = React.ComponentProps<typeof Card> & {
   glamp: Glamp;
@@ -23,7 +24,12 @@ export function PreviewCard({ className, glamp, ...props }: CardProps) {
         <CardDescription>{glamp.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4"></CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter>
+        <p>
+          {formatDate(new Date(glamp.availableFrom), "dd.MMMM yyyy")} -{" "}
+          {formatDate(new Date(glamp.availableTo), "dd.MMMM yyyy")}
+        </p>
+      </CardFooter>
     </Card>
   );
 }
