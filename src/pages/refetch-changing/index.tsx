@@ -209,7 +209,6 @@ export const ShowDealsGrandChildren = () => {
     fetchPolicy: "standby",
   });
 
-  console.log(data);
   if (data?.deals.length)
     return (
       <div className="border-orange-700 border-2 p-1">

@@ -59,10 +59,10 @@ export class GlampResolver {
     if (dateRange) {
       const { from, to } = dateRange;
       glampsQueryBuilder = glampsQueryBuilder.where(
-        and(gte(dbGlamps.availableFrom, from), lte(dbGlamps.availableTo, to))
+        and(lte(dbGlamps.availableFrom, to), gte(dbGlamps.availableTo, from))
       );
       totalCountQueryBuilder = totalCountQueryBuilder.where(
-        and(gte(dbGlamps.availableFrom, from), lte(dbGlamps.availableTo, to))
+        and(lte(dbGlamps.availableFrom, to), gte(dbGlamps.availableTo, from))
       );
     }
 

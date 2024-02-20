@@ -17,13 +17,13 @@ import { DateRange } from "react-day-picker";
 export default function GlampsSearchPage() {
   const router = useRouter();
 
-  const { isLuxury } = router.query;
+  const validSearchParams = getValidSearchParams(router.query);
 
   const { data, loading, refetch } = useGetSearchGlampsQuery({
     variables: {
       limit: 3,
       offset: 0,
-      isLuxury: !!isLuxury,
+      isLuxury: validSearchParams.isLuxury,
     },
     fetchPolicy: "cache-first",
     nextFetchPolicy: "network-only",
@@ -59,7 +59,7 @@ export default function GlampsSearchPage() {
     <Shell as="main" variant="default">
       <h1>Glamping</h1>
       <SearchBar onSearch={handleSearch} />
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid md:grid-cols-3 gap-3">
         {data?.searchGlamps.glamps.map((glamp) => (
           <PreviewCard key={glamp.id} glamp={glamp} />
         ))}

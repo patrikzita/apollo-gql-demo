@@ -16,7 +16,7 @@ type CardProps = React.ComponentProps<typeof Card> & {
 
 export function PreviewCard({ className, glamp, ...props }: CardProps) {
   return (
-    <Card className={cn("w-[380px]", className)} {...props}>
+    <Card className={cn(className)} {...props}>
       <CardHeader>
         <CardTitle className={cn({ "text-yellow-600": glamp.isLuxury })}>
           {glamp.title}

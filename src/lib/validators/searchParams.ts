@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from "querystring";
-import { string, z } from "zod";
+import { z } from "zod";
 
 const stringToBoolean = (val: unknown) => {
   if (val === "true") return true;
