@@ -1,7 +1,7 @@
 import { db } from "@/db/db";
 import { glamps as dbGlamps } from "@/db/schema";
 import { and, count, eq, gte, lte } from "drizzle-orm";
-import { Arg, Ctx, Float, Int, Query, Resolver } from "type-graphql";
+import { Arg, Args, Ctx, Float, Int, Query, Resolver } from "type-graphql";
 import { Glamp, GlampsResponse } from "./glamps";
 import type { MyContext } from "@/pages/api/graphql";
 import { z } from "zod";
@@ -19,6 +19,19 @@ export class GlampResolver {
   async glamps(): Promise<Glamp[]> {
     const glamps = db.select().from(dbGlamps).all();
     return glamps;
+  }
+
+  @Query(() => Glamp)
+  async glamp(
+    @Arg("glampId", () => Int)
+    glampId: number
+  ): Promise<Glamp> {
+    const glamp = await db
+      .select()
+      .from(dbGlamps)
+      .where(eq(dbGlamps.id, glampId));
+
+    return glamp[0];
   }
 
   @Query(() => GlampsResponse)

@@ -1,0 +1,14 @@
+query getGlamp($glampId: Int) {
+  glamp(glampId: $glampId) {
+    id
+    title
+    description
+    type
+    price
+    availableFrom
+    availableTo
+    adultCapacity
+    childCapacity
+    isLuxury
+  }
+}

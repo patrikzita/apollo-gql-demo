@@ -61,7 +61,11 @@ export default function GlampsSearchPage() {
       <SearchBar onSearch={handleSearch} />
       <div className="grid md:grid-cols-3 gap-3">
         {data?.searchGlamps.glamps.map((glamp) => (
-          <PreviewCard key={glamp.id} glamp={glamp} />
+          <PreviewCard
+            key={glamp.id}
+            glamp={glamp}
+            queryParams={router.query}
+          />
         ))}
       </div>
     </Shell>

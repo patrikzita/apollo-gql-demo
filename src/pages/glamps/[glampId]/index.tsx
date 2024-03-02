@@ -1,37 +1,39 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Shell } from "@/components/Shell";
+import {
+  GetGlampDocument,
+  GetGlampQuery,
+  GetGlampQueryVariables,
+  useGetGlampQuery,
+} from "@/generated/graphql";
+import { addApolloState, initializeApollo } from "@/utils/apolloClient";
+import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
-import { searchParamsSchema } from "@/lib/validators/searchParams";
-import { useRouter } from "next/router";
 import { isDateRange } from "react-day-picker";
-import { DateRange } from "./DateRange";
-import { Checkbox } from "./ui/checkbox";
+import { DateRange } from "@/components/DateRange";
+import { z } from "zod";
+import { searchParamsSchema } from "@/lib/validators/searchParams";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/components/ui/use-toast";
 
 const FormSchema = z.object({
   dateRange: z.object({
     from: z.date({ required_error: "A date of birth is required." }),
     to: z.date({ required_error: "A date to is required" }),
   }),
-  isLuxury: z.boolean().default(false).optional(),
 });
 
-type SearchBarProps = {
-  onSearch: ({ variables, dateRange }) => void;
-};
-
-function SearchBar({ onSearch }: SearchBarProps) {
+const GlampDetailPage = () => {
   const router = useRouter();
 
   const searchParamsResult = searchParamsSchema.safeParse(router.query);
@@ -58,17 +60,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
     resolver: zodResolver(FormSchema),
     defaultValues,
   });
-
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    onSearch({
-      dateRange: data.dateRange,
-      variables: {
-        offset: 0,
-        limit: 3,
-        isLuxury: data.isLuxury,
-      },
-    });
-
     toast({
       title: "You submitted the following values:",
       description: (
@@ -79,8 +71,21 @@ function SearchBar({ onSearch }: SearchBarProps) {
     });
   }
 
+  const { glampId } = router.query;
+
+  const { data, loading } = useGetGlampQuery({
+    variables: {
+      glampId: Number(glampId),
+    },
+  });
+
+  if (loading) {
+    <div>loading</div>;
+  }
+
   return (
-    <>
+    <Shell>
+      <h1>{data.glamp.title}</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -101,28 +106,29 @@ function SearchBar({ onSearch }: SearchBarProps) {
               );
             }}
           />
-          <FormField
-            control={form.control}
-            name="isLuxury"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Luxury Glamping</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-    </>
+    </Shell>
   );
-}
+};
 
-export default SearchBar;
+export default GlampDetailPage;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const apolloClient = initializeApollo({ context });
+
+  const { glampId } = context.query;
+
+  await apolloClient.query<GetGlampQuery, GetGlampQueryVariables>({
+    query: GetGlampDocument,
+    variables: {
+      glampId: Number(glampId),
+    },
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+}
